@@ -1,4 +1,3 @@
-package com.company;
 
 import java.util.Scanner;
 import java.util.StringTokenizer;
@@ -6,8 +5,8 @@ import java.util.StringTokenizer;
 public class Main {
 
     public static void main(String[] args) {
-	    Main main = new Main();
-	    main.begin();
+        Main main = new Main();
+        main.begin();
     }
 
     void begin() {
@@ -27,16 +26,21 @@ public class Main {
             for(int i = 0; i < (num - 1); i++) {
                 differences[i] = Math.abs(values[i] - values[i+1]);
 
-                //System.out.println(differences[i]);
+                //System.out.print(differences[i] + ", ");
             }
-            for(int i = 0; i < (num -1); i++) {
-                if (i != (num - 2)) {
-                    if((differences[i] - differences[i+1]) == 1) {
-                        jolly = true;
-                        //System.out.println("Jolly True");
+            if(num == 1) {
+                jolly = true;
+            }
+            else {
+                for (int i = num - 1; i > 0; i--) {
+                    jolly = false;
+                    for (int j = 0; j < num - 1; j++) {
+                        if (differences[j] == i) {
+                            jolly = true;
+                            break;
+                        }
                     }
-                    else {
-                        jolly = false;
+                    if (!jolly) {
                         break;
                     }
                 }
@@ -45,7 +49,7 @@ public class Main {
                 System.out.print("Jolly\n");
             }
             else {
-                System.out.print("Not Jolly\n");
+                System.out.print("Not jolly\n");
             }
 
 
