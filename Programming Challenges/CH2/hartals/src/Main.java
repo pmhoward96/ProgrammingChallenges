@@ -15,32 +15,40 @@ public class Main {
         //BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
         Scanner scan = new Scanner(System.in);
         int t = Integer.parseInt(scan.nextLine());
-        System.out.println(t);
+        //System.out.println(t);
         for(int i = 0; i < t; i++) {
             //n = number of days in simulation
             int n = Integer.parseInt(scan.nextLine());
-            System.out.println("N: " + n);
+            //System.out.println("N: " + n);
             //p = number of political parties
             int p = Integer.parseInt(scan.nextLine());
-            System.out.println("P: " + p);
+            //System.out.println("P: " + p);
             //hp = hartal parameter
             int hp[] = new int[p];
-            System.out.print("HP: ");
+            //System.out.print("HP: ");
             for(int j = 0; j < p; j++) {
                 String temp = scan.nextLine();
-                System.out.print(temp);
-                hp[i] = Integer.parseInt(temp, 10);
+                hp[j] = Integer.parseInt(temp, 10);
                 System.out.print(hp[j] + " ");
             }
             int days = 0;
+
             for(int j = 1; j <= n; j++) {
+                boolean done = false;
                 for(int k = 0; k < p; k++) {
                     if(j % hp[k] == 0) {
-                        days++;
+                        if(j % 7 == 0 || j % 7 == 6) {
+                            days = days - 1;
+                            //System.out.println(days);
+                        }
+                        if (!done) {
+                            days++;
+                            done = true;
+                        }
+
+                        //System.out.println(days);
                     }
-                    if(j % 7 == 0 || j % 7 == 6) {
-                        days--;
-                    }
+
                 }
             }
 
