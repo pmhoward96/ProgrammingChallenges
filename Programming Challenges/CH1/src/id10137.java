@@ -2,9 +2,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Scanner;
 
-public class id10137 {
+class Main{
     public static void main(String[] args) throws IOException {
-        id10137 m = new id10137();
+        Main m = new Main();
         m.begin();
     }
 

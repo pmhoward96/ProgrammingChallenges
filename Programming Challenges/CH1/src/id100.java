@@ -1,10 +1,10 @@
 import java.io.IOException;
 import java.util.Scanner;
 
-public class id100 {
+class Main{
 
     public static void main(String[] args) throws IOException{
-        id100 m = new id100();
+        Main m = new Main();
         m.begin();
     }
 

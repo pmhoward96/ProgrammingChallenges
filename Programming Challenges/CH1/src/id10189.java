@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
-public class Main {
+class Main{
 
     public static void main(String[] args) throws IOException {
         Main m = new Main();
