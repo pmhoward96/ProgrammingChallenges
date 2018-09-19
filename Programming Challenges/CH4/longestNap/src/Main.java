@@ -1,11 +1,44 @@
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
 import static java.time.temporal.ChronoUnit.MINUTES;
 
 class Main {
+
+    public class appointment implements Comparable<appointment> {
+        LocalTime begin;
+        LocalTime end;
+
+        appointment(LocalTime b, LocalTime e) {
+            begin = b;
+            end = e;
+        }
+
+        public void setBegin(LocalTime begin) {
+            this.begin = begin;
+        }
+
+        public void setEnd(LocalTime end) {
+            this.end = end;
+        }
+
+        public LocalTime getBegin() {
+            return begin;
+        }
+
+        public LocalTime getEnd() {
+            return end;
+        }
+
+        @Override
+        public int compareTo(appointment ap) {
+            return begin.compareTo(ap.begin);
+        }
+    }
 
     public static void main(String[] args) {
 	// write your code here
@@ -20,19 +53,21 @@ class Main {
 
             //Inputting Times
             int testCases = Integer.parseInt(scan.nextLine());
-            LocalTime[][] ss = new LocalTime[testCases][2];
+            appointment[] aps = new appointment[testCases];
             for(int i = 0; i < testCases; i++) {
                 String s = scan.nextLine();
                 StringTokenizer st = new StringTokenizer(s);
-                for(int j = 0; j < 2; j++) {
-                    String sb = st.nextToken();
-                    if(sb != ":") {
-                        ss[i][j] = LocalTime.parse(sb, DateTimeFormatter.ofPattern("HH:mm"));
-                        //System.out.println(ss[i][j]);
-                    }
+                aps[i] = new appointment(LocalTime.parse(st.nextToken(), DateTimeFormatter.ofPattern("HH:mm")), LocalTime.parse(st.nextToken(), DateTimeFormatter.ofPattern("HH:mm")));
 
-                }
             }
+            //Sorting Appointments
+            Arrays.sort(aps, new Comparator<appointment>() {
+                @Override
+                public int compare(appointment ap1, appointment ap2) {
+                    return ap1.begin.compareTo(ap2.begin);
+                }
+            });
+
 
             //Calculating Differences
             int[] minutes = new int[testCases + 1];
@@ -42,14 +77,14 @@ class Main {
             int maxPosition = 0;
             for(int i = 0; i < testCases + 1; i++) {
                 if(i == 0) {
-                    minutes[i] = (int)begin.until(ss[0][0], MINUTES);
+                    minutes[i] = (int)begin.until(aps[0].begin, MINUTES);
                 }
                 else if(i == testCases) {
-                    minutes[i] = (int)ss[testCases-1][1].until(end, MINUTES);
+                    minutes[i] = (int)aps[i - 1].end.until(end, MINUTES);
 
                 }
                 else {
-                    minutes[i] = (int)ss[i - 1][1].until(ss[i][0], MINUTES);
+                    minutes[i] = (int)aps[i-1].end.until(aps[i].begin, MINUTES);
 
                 }
                 //System.out.println(minutes[i]);
@@ -64,7 +99,7 @@ class Main {
                 out = OutputBuild(begin, minutes[maxPosition],day);
             }
             else {
-                out = OutputBuild(ss[maxPosition-1][1], minutes[maxPosition], day);
+                out = OutputBuild(aps[maxPosition-1].end, minutes[maxPosition], day);
             }
             day++;
             System.out.print(out);
@@ -94,4 +129,8 @@ class Main {
         String ss = sb.toString();
         return ss;
     }
+
+
+
+
 }
