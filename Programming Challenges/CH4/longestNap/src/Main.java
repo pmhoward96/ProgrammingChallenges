@@ -6,7 +6,6 @@ import java.util.StringTokenizer;
 import static java.time.temporal.ChronoUnit.MINUTES;
 
 class Main {
-
     public static void main(String[] args) {
 	// write your code here
         Main m = new Main();
