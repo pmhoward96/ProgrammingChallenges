@@ -1,13 +1,14 @@
 
 
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
 
- class Main {
+class Main {
 
-   public static void main(String[] args) {
-	// write your code here
+    public static void main(String[] args) {
+        // write your code here
         Main main = new Main();
         main.begin();
     }
@@ -22,58 +23,46 @@ import java.util.StringTokenizer;
             for(int i = 0; i < numPan; i++) {
                 pancakes[i] = Integer.parseInt(st.nextToken());
             }
-            int[] orig = pancakes;
+            int[] orig = Arrays.copyOf(pancakes, pancakes.length);
+            int[] sorted = Arrays.copyOf(pancakes, pancakes.length);
+            Arrays.sort(sorted);
+            StringBuilder flips = new StringBuilder();
 
-            boolean sorted = false;
-            int n = 0;
-            while(!sorted) {
-                for(int i = 0; i < pancakes.length - 1; i++) {
-                    if(pancakes[i] > pancakes[i + 1]){
-                        sorted = false;
-                        break;
-                    }
-                    else {
-                        sorted = true;
-                    }
-
-                }
-
-                if(!sorted){
-                    int max = 1;
-                    int maxLocation = 0;
-                    for(int i = 0; i < pancakes.length - n; i++) {
-                        if(pancakes[i] > max) {
-                            max = pancakes[i];
-                            maxLocation = i;
+            for(int i = numPan - 1; i >= 0; i--) {
+                if(sorted[i] != pancakes[i]) {
+                    if(sorted[i] != pancakes[0]) {
+                        int n = i - 1;
+                        while(n >= 0) {
+                            if(pancakes[n] == sorted[i]) {
+                                break;
+                            }
+                            n--;
                         }
+                        flip(pancakes, numPan - n);
+                        flips.append(numPan - n + " ");
                     }
+                    flip(pancakes, numPan - i);
+                    flips.append(numPan - i + " ");
 
-                    if(maxLocation == 0) {
-                        flip(pancakes, 1 + n);
-                        n++;
-                        System.out.println("flipped");
-                    }
-                    else {
-                        System.out.println("Else");
-                    }
                 }
             }
-            for(int i = 0; i < orig.length - 1; i++) {
-                System.out.print(orig[i] + ' ');
+            flips.append(0 + "\n");
+            for(int i = 0; i < numPan; i++) {
+                System.out.print(orig[i] + " ");
             }
-            System.out.print(orig[orig.length - 1] + "\n");
-
-
+            System.out.print("\n");
+            System.out.print(flips.toString());
         }
 
     }
-    void flip(int[] pancakes, int flip) {
-        for(int i = 0; i < ((pancakes.length) - (flip - 1)) / 2; i++)
-        {
-            int temp = pancakes[i];
-            pancakes[i] = pancakes[pancakes.length - i - 1];
-            pancakes[pancakes.length - i - 1] = temp;
+    public static void flip (int [] pancakes, int flipLocation) {
+        int [] temp= Arrays.copyOf(pancakes, pancakes.length);
+
+        int endIndex=pancakes.length-flipLocation;
+        for (int i=0;i<=endIndex;i++) {
+            pancakes[i]=temp[endIndex-i];
         }
     }
+
 
 }
