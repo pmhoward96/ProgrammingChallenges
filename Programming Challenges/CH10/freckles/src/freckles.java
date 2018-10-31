@@ -1,105 +1,116 @@
-import java.util.Arrays;
-import java.util.Scanner;
+// A Java program for Prim's Minimum Spanning Tree (MST) algorithm. 
+// The program is for adjacency matrix representation of the graph 
 
-class Main {
+import java.util.*;
+import java.lang.*;
+import java.io.*;
 
-     public static void main(String[] args) {
-         Main main = new Main();
-         main.begin();
+class Main2
+{
+    public static void main (String[] args)
+    {
+        /* Let us create the following graph
+        2 3
+        (0)--(1)--(2)
+        | / \ |
+        6| 8/ \5 |7
+        | /     \ |
+        (3)-------(4)
+            9         */
+        Main2 t = new Main2();
+        int graph[][] = new int[][] {{0, 2, 0, 6, 0},
+                {2, 0, 3, 8, 5},
+                {0, 3, 0, 0, 7},
+                {6, 8, 0, 0, 9},
+                {0, 5, 7, 9, 0}};
 
-     }
+        // Print the solution
+        t.hi(graph);
+    }
+    // Number of vertices in the graph 
+    private static final int V=5;
 
-     void begin() {
-         Scanner scan = new Scanner(System.in);
-         int testCases = scan.nextInt();
-         for(int l = 0; l < testCases; l++){
-             int numFreckles = scan.nextInt();
-             float[][] freckles = new float[numFreckles][2];
-             for(int i = 0; i < numFreckles; i++) {
-                 freckles[i][0] = scan.nextFloat();
-                 freckles[i][1] = scan.nextFloat();
-             }
-             float[][] distances = new float[numFreckles][numFreckles];
+    // A utility function to find the vertex with minimum key 
+    // value, from the set of vertices not yet included in MST 
+    int minKey2(int key[], Boolean mstSet[])
+    {
+        // Initialize min value 
+        int min = Integer.MAX_VALUE, min_index=-1;
 
-             for(int i = 0; i < numFreckles; i++){
-                 float totDistance = 0;
-                 for(int j = 0; j < numFreckles; j++) {
-                     if (i != j) {
-                         float x1 = freckles[i][0];
-                         float x2 = freckles[j][0];
-                         float y1 = freckles[i][1];
-                         float y2 = freckles[j][1];
-                         distances[i][j] = (float) Math.sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)));
-                     }
-                 }
+        for (int v = 0; v < V; v++)
+            if (mstSet[v] == false && key[v] < min)
+            {
+                min = key[v];
+                min_index = v;
+            }
 
-             }
-
-             float minTotal = prim(distances, numFreckles);
-             System.out.print(round2(minTotal, 2) + "\n\n");
-
-//             for(int i = 0; i < numFreckles; i++) {
-//                 System.out.print("\nFreckle Number " + i + " ");
-//                 for(int j = 0; j < numFreckles; j++) {
-//                     System.out.print(distances[i][j] + ",");
-//                 }
-//             }
-
-
-
-
-
-         }
-     }
-    public static float round2(float number, int scale) {
-        int pow = 10;
-        for (int i = 1; i < scale; i++)
-            pow *= 10;
-        float tmp = number * pow;
-        return ( (float) ( (int) ((tmp - (int) tmp) >= 0.5f ? tmp + 1 : tmp) ) ) / pow;
+        return min_index;
     }
 
-     float prim(float graph[][], int numFreckles) {
-         int[] parent = new int[numFreckles];
-         float[] key = new float[numFreckles];
+    // A utility function to print the constructed MST stored in 
+    // parent[] 
+    void printMST(int parent[], int n, int graph[][])
+    {
+        System.out.println("Edge \tWeight");
+        for (int i = 1; i < V; i++)
+            System.out.println(parent[i]+" - "+ i+"\t"+
+                    graph[i][parent[i]]);
+    }
 
-         boolean mstSet[] = new boolean[numFreckles];
-         for(int i = 0; i < numFreckles; i++) {
-             key[i] = Integer.MAX_VALUE;
-             mstSet[i] = false;
-         }
+    // Function to construct and print MST for a graph represented 
+    // using adjacency matrix representation 
+    void hi(int graph[][])
+    {
+        // Array to store constructed MST 
+        int parent[] = new int[V];
 
-         key[0] = 0;
-         parent[0] = -1;
+        // Key values used to pick minimum weight edge in cut 
+        int key[] = new int [V];
 
-         for(int i = 0; i < numFreckles - 1; i++) {
-             int u = minKey(key, mstSet, numFreckles);
-             mstSet[u] = true;
+        // To represent set of vertices not yet included in MST 
+        Boolean mstSet[] = new Boolean[V];
 
-             for(int j = 0; j < numFreckles; j++) {
-                 if(graph[i][j] != 0 && mstSet[j] == false && graph[i][j] < key[j] ) {
-                     parent[j] = i;
-                     key[j] = graph[i][j];
-                 }
-             }
-         }
-         float minTotal = 0;
-         for(int i = 1; i < numFreckles; i++) {
-             minTotal = minTotal + graph[i][parent[i]];
-         }
+        // Initialize all keys as INFINITE 
+        for (int i = 0; i < V; i++)
+        {
+            key[i] = Integer.MAX_VALUE;
+            mstSet[i] = false;
+        }
 
-         return minTotal;
-     }
+        // Always include first 1st vertex in MST. 
+        key[0] = 0;     // Make key 0 so that this vertex is 
+        // picked as first vertex
+        parent[0] = -1; // First node is always root of MST 
 
-     int minKey(float key[], boolean mstSet[], int numFreckles) {
-         float min = Integer.MAX_VALUE;
-         int minPos = -1;
-         for(int i = 0; i < numFreckles; i++){
-             if(mstSet[i] == false && key[i] < min) {
-                 min = key[i];
-                 minPos = i;
-             }
-         }
-         return minPos;
-     }
-}
+        // The MST will have V vertices 
+        for (int count = 0; count < V-1; count++)
+        {
+            // Pick thd minimum key vertex from the set of vertices 
+            // not yet included in MST 
+            int u = minKey2(key, mstSet);
+
+            // Add the picked vertex to the MST Set 
+            mstSet[u] = true;
+
+            // Update key value and parent index of the adjacent 
+            // vertices of the picked vertex. Consider only those 
+            // vertices which are not yet included in MST 
+            for (int v = 0; v < V; v++)
+
+                // graph[u][v] is non zero only for adjacent vertices of m 
+                // mstSet[v] is false for vertices not yet included in MST 
+                // Update the key only if graph[u][v] is smaller than key[v] 
+                if (graph[u][v]!=0 && mstSet[v] == false &&
+                        graph[u][v] < key[v])
+                {
+                    parent[v] = u;
+                    key[v] = graph[u][v];
+                }
+        }
+
+        // print the constructed MST 
+        printMST(parent, V, graph);
+    }
+
+
+} 
