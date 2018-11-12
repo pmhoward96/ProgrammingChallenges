@@ -6,11 +6,11 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
-class Main {
+class Main2 {
 
     public static void main(String[] args) throws IOException{
 	// write your code here
-        Main main = new Main();
+        Main2 main = new Main2();
         main.begin();
     }
     class Elephant implements Comparable<Elephant>{
@@ -29,8 +29,6 @@ class Main {
             return this.weight-e.weight;
         }
     }
-
-
 
     void begin() throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -77,7 +75,7 @@ class Main {
         boolean first = true;
         int last = 0;
         System.out.print(max + "\n");
-        for(int i = q.length -1; i >=0; i--) {
+        for(int i = q.length -1; i >=0 && max > 0; i--) {
             if(q[i] == max) {
                 if(last < elephants[i].iq || first) {
                     last = elephants[i].iq;
