@@ -33,7 +33,7 @@ class Main2 {
     void begin() throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         ArrayList<Elephant> elephantsList = new ArrayList<Elephant>();
-        int count = 1;
+        int count = 1; 
         while(true) {
             String w = br.readLine();
 
