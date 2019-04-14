@@ -110,17 +110,25 @@ def euclid_to_geo(eXs, eYs, gStart, gEnd):
     ## gStart - List with 0 as Long, and 1 as Lat to be used to create factor
     ## gEnd - List with 0 as Long, and 1 as Lat to be used to create factor
 
-    x_factor = ((gEnd[0] - gStart[0]) / (eXs[-1] - eXs[0]))
-    y_factor = ((gEnd[1] - gStart[1]) / (eYs[-1] - eYs[0]))
-    print("X_factor: ", x_factor,"Y_factor: ", y_factor)
     new_long = []
     new_lat = []
-
+    rx_min = eXs[0]
+    rx_max = eXs[-1]
+    ry_min = eYs[0]
+    ry_max = eYs[-1]
+    tx_min = gStart[0]
+    tx_max = gEnd[0]
+    ty_min = gStart[-1]
+    ty_max = gEnd[-1]
     for i in eXs:
-        new_long.append(i * x_factor)
+        m = ((i - rx_min) / abs(rx_max - rx_min)) * (abs(tx_max - tx_min)) + tx_min
+        new_long.append(m)
     for j in eYs:
-        new_lat.append(j * y_factor)
+        m = ((j - ry_min) / abs(ry_max - ry_min)) * (abs(ty_max - ty_min)) + ty_min
+        new_lat.append(m)
 
     return new_long, new_lat
+
+
 
 

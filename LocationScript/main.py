@@ -19,7 +19,6 @@ def location_to_names(locations_df, names_df, year, geo_df):
         print(i, func(i))
         evenY.append(func(i))
 
-
     gLocations = geo_df[geo_df['Year'] == year]
     gStart = [gLocations["Start_X"], gLocations["Start_Y"]]
     gEnd = [gLocations["End_X"], gLocations["End_Y"]]
@@ -55,15 +54,17 @@ print(names2005.head())
 df_2007 = pd.read_csv("data/2007digitizer.csv", header = None, names = ['X', 'Y'])
 names2007 = names2005 = names[names["gradyear"] == 2007]
 #print(df_2007)
+
 func = interp1d(df_2007['X'].values, df_2007['Y'].values)
 x = df_2007["X"].values
 y = df_2007['Y'].values
 res = len(names2007) / 2
+print(res)
 
 minx = int(x[0].round())
 maxx = int(x[-1].round())
-badx = np.linspace(minx, maxx, res)
-print(badx)
+badx = np.linspace(x[0], x[-1], int(res))
+#print(badx)
 bady = func(badx)
 
 gLocations = geodf[geodf['Year'] == 2007]
@@ -72,14 +73,33 @@ gEnd = [gLocations["End_X"], gLocations["End_Y"]]
 
 #print(badx, bady, gStart, gEnd)
 new_long, new_lat = LU.euclid_to_geo(badx, bady, gStart, gEnd)
-print("New long" ,new_long[0])
-new_long_reversed = new_long.reverse()
+long_max = new_long[-1]
+lat_max = new_lat[-1]
+new_long_reversed = new_long[::-1]
 #print(new_long_reversed)
-new_lat_reversed = new_lat.reverse()
-full_long = new_long.extend(new_long_reversed)
-full_lat = new_lat.extend(new_lat_reversed)
-
+new_lat_reversed = new_lat[::-1]
+new_long.extend(new_long_reversed)
+new_lat.extend(new_lat_reversed)
+#print(len(new_long))
+if len(new_long) != len(names2007):
+    new_long.append(new_long[-1])
+    new_lat.append(new_lat[-1])
 sortedNames = names2007.sort_values("lastname")
-print(sortedNames)
+#print(sortedNames)
 
-df_new = pd.DataFrame({'first_name' : names2007['firstname'], 'last_name' : names2007['lastname'], 'longitutde' : full_long})
+fixed_long = []
+for i in new_long:
+    fixed_long.append(i.tolist()[0])
+
+fixed_lat = []
+for j in new_lat:
+    fixed_lat.append(j.tolist()[0])
+
+df_new = pd.DataFrame({'first_name' : sortedNames['firstname'], 'last_name' : sortedNames['lastname'], 'longitude' : fixed_long, 'latitude' : fixed_lat, 'gradyear' : 2007})
+print(df_new)
+plt.figure()
+plt.plot(df_new['longitude'], df_new['latitude'])
+#plt.axis([0,int(long_max), int(lat_max), 0])
+plt.show()
+df_new.to_csv(r'data/2007.csv', index = False)
+print("Done")
